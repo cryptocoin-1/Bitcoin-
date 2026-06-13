@@ -1,95 +1,386 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
-
+<title>Live Market Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f5f5f7;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+    color: #111;
+  }
+  header {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  header a {
+    text-decoration: none;
+    padding: 12px 18px;
+    border-radius: 22px;
+    color: #111;
+    font-weight: 600;
+    transition: 0.2s;
+  }
+  header a.active {
+    background: #0b274d;
+    color: #fff;
+  }
+  .green {
+    color: #0b274d;
+  }
+  .chart-container {
+    width: 100%;
+    height: 250px;
+    margin: 20px 0;
+  }
+  .timeframe {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 10px 0;
+  }
+  .timeframe a {
+    padding: 5px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #111;
+    border: 1px solid #ccc;
+  }
+  .timeframe a.active {
+    background: #0b274d;
+    color: #fff;
+    border: none;
+  }
+  .account {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  .account a {
+    text-decoration: none;
+    color: #111;
+    display: block;
+  }
+  .account .value {
+    text-align: right;
+  }
+  .account .green {
+    display: block;
+    margin-top: 5px;
+  }
+  #balance, #change {
+    color: #000;
+    text-decoration: none;
+  }
+  .wallet-section {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .wallet-btn {
+    background: #0b274d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .balance-section {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .balance-section h1 {
+    margin: 0;
+    font-size: 28px;
+  }
+  .balance-section p {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+  }
 
-.login-box{
-    background:white;
-    padding:30px;
-    border-radius:20px;
-    width:320px;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
-}
+  /* Overlay Loader */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(11, 39, 77, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid orange;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+  .loading-text {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .carousel-container {
+    width: 100%;
+    margin: 30px 0;
+    overflow-x: auto;
+    display: flex;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-left: 16px;
+  }
+  .carousel-container::-webkit-scrollbar {
+    display: none;
+  }
 
-h2{
-    text-align:center;
-}
+  .testimonial-card {
+    flex: 0 0 80%;
+    min-width: 80%;
+    margin-right: 20px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px;
+    scroll-snap-align: start;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
 
-input{
-    width:100%;
-    padding:12px;
-    margin-top:12px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-sizing:border-box;
-}
+  .testimonial-card .circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 60%;
+    overflow: hidden;
+    margin-bottom: 5px;
+  }
 
-button{
-    width:100%;
-    margin-top:20px;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#111;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-}
+  .testimonial-card .circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-.error{
-    color:red;
-    margin-top:10px;
-    text-align:center;
-}
+  .testimonial-card .name {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .testimonial-card .text {
+    font-size: 14px;
+    color: #333;
+  }
 </style>
 </head>
 <body>
 
-<div class="login-box">
-    <h2>Login</h2>
+<header>
+  <a href="accounts.html" class="active">Accounts</a>
+  <a href="withdraw.html">Withdrawal</a>
+  <a href="plan.html">Planning</a>
+</header>
 
-    <input type="text" id="username" placeholder="Username">
+<div class="balance-section">
+  <h1>
+    <a href="anotherpage.html" id="balance" style="color:#000; text-decoration:none;">
+      $7,303.04
+    </a>
+  </h1>
+  <p>Investment Balance</p>
+  <p id="change" class="green">+50.00% today</p>
+</div>
 
-    <input type="password" id="password" placeholder="Password">
+<div class="chart-container">
+  <canvas id="marketChart"></canvas>
+</div>
 
-    <button onclick="login()">Login</button>
+<div class="wallet-section">
+  <button class="wallet-btn" onclick="showLoadingAndRedirect('withdraw.html')">withdrawal</button>
+</div>
 
-    <div class="error" id="error"></div>
+<div class="timeframe">
+  <a href="#">1M</a>
+  <a href="#">1Y</a>
+  <a href="#" class="active">YTD</a>
+</div>
+
+<div class="account">
+  <a href="#">
+    <strong>ROTH IRA</strong><br>
+    X123456789
+  </a>
+  <div class="value">
+    <a href="#"><strong>$2,063.27</strong></a>
+    <a href="#" class="green">+1.23% today</a>
+  </div>
+</div>
+
+<div class="account">
+  <a href="#">
+    <strong>Trading account</strong><br>
+    X123456789
+  </a>
+  <div class="value">
+    <a href="#"><strong>$692.96</strong></a>
+    <a href="#" class="green">+1.23% today</a>
+  </div>
+</div>
+
+<div class="carousel-container">
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/men/1.jpg" alt="John"></div>
+    <div class="name">John</div>
+    <div class="text">I bought a plan and started earning immediately.</div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Emily"></div>
+    <div class="name">Emily</div>
+    <div class="text">The payout was fast after upgrading. Highly recommend!</div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/men/3.jpg" alt="Michael"></div>
+    <div class="name">Michael</div>
+    <div class="text">Easy process and great support. Earnings were smooth.</div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/women/4.jpg" alt="Sophia"></div>
+    <div class="name">Sophia</div>
+    <div class="text">Invested in a plan and started seeing results quickly!</div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/men/5.jpg" alt="David"></div>
+    <div class="name">David</div>
+    <div class="text">Reliable payouts and very easy to use platform.</div>
+  </div>
+
+  <div class="testimonial-card">
+    <div class="circle"><img src="https://randomuser.me/api/portraits/women/6.jpg" alt="Olivia"></div>
+    <div class="name">Olivia</div>
+    <div class="text">Great experience buying a plan and getting paid!</div>
+  </div>
+</div>
+
+<!-- ✅ Account ID below testimonials -->
+<div id="accountIDDisplay" style="text-align:center; margin:20px 0; font-weight:600; color:#0b274d;"></div>
+
+<!-- Transparent Loading Overlay -->
+<div class="overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading...</div>
 </div>
 
 <script>
-function login(){
+  // Chart.js setup
+  const ctx = document.getElementById('marketChart').getContext('2d');
+  const marketChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'BTC Price (Simulated)', data: [], borderColor: '#0b274d', backgroundColor: 'rgba(11,39,77,0.1)', fill:true, tension:0.5, borderWidth:2 }]},
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{display:false, grid:{display:false}}, y:{display:false, grid:{display:false}}} }
+  });
 
-    const username =
-        document.getElementById("username").value;
-
-    const password =
-        document.getElementById("password").value;
-
-    if(
-        username === "Luckyday" &&
-        password === "Hashme"
-    ){
-        window.location.href = "blog.html";
-    }else{
-        document.getElementById("error").innerHTML =
-        "Invalid username or password";
+  let price = 40000;
+  function updateChart() {
+    const now = new Date().toLocaleTimeString();
+    price += (Math.random() - 0.5) * 200; 
+    marketChart.data.labels.push(now);
+    marketChart.data.datasets[0].data.push(price);
+    if(marketChart.data.labels.length > 20){
+      marketChart.data.labels.shift();
+      marketChart.data.datasets[0].data.shift();
     }
-}
-</script>
+    marketChart.update();
+  }
+  setInterval(updateChart,5000);
+  updateChart();
 
+  window.addEventListener('load', () => {
+    alert("🎉 You received $7,303.04 for signing up!");
+  });
+
+  function showLoadingAndRedirect(url) {
+    const overlay = document.getElementById("loadingOverlay");
+    overlay.style.display = "flex";
+    setTimeout(() => {
+      overlay.style.display = "none";
+      window.location.href = url;
+    }, 3000);
+  }
+
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
+    if (href && href !== "#") {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        showLoadingAndRedirect(href);
+      });
+    }
+  });
+
+  window.addEventListener("pageshow", function() {
+    document.getElementById("loadingOverlay").style.display = "none";
+  });
+
+  const carousel = document.querySelector('.carousel-container');
+  const moreTestimonials = [
+    { img: 'https://randomuser.me/api/portraits/men/7.jpg', name: 'James', text: 'Happy with my earnings. Definitely worth it.' },
+    { img: 'https://randomuser.me/api/portraits/women/8.jpg', name: 'Emma', text: 'Fast and smooth payment after purchasing a plan.' },
+    { img: 'https://randomuser.me/api/portraits/men/9.jpg', name: 'Robert', text: 'Excellent service and prompt payment. Very happy.' },
+    { img: 'https://randomuser.me/api/portraits/women/10.jpg', name: 'Mia', text: 'Very easy to use platform. Highly recommended!' }
+  ];
+
+  moreTestimonials.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'testimonial-card';
+    card.innerHTML = `
+      <div class="circle"><img src="${item.img}" alt="${item.name}"></div>
+      <div class="name">${item.name}</div>
+      <div class="text">${item.text}</div>
+    `;
+    carousel.appendChild(card);
+  });
+
+  let scrollAmount = 0;
+  const cardWidth = carousel.querySelector('.testimonial-card').offsetWidth + 20;
+  setInterval(() => {
+    scrollAmount += cardWidth;
+    if(scrollAmount >= carousel.scrollWidth - carousel.clientWidth){
+      scrollAmount = 0;
+    }
+    carousel.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  }, 3000);
+
+  // ✅ Display logged-in user's Account ID below testimonials
+  const email = localStorage.getItem("bysecta_email");
+  const users = JSON.parse(localStorage.getItem("bysecta_users") || '{}');
+  if(email && users[email] && users[email].accountID) {
+      document.getElementById("accountIDDisplay").innerText = "Account ID: " + users[email].accountID;
+  }
+
+</script>
 </body>
 </html>
