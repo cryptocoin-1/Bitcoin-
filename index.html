@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bysecta Wallet</title>
 
 <style>
-*{box-sizing:border-box;}
+*{
+    box-sizing:border-box;
+}
 
 html,body{
     height:100%;
@@ -59,6 +61,8 @@ input{
     border:1px solid rgba(255,255,255,.08);
     background:rgba(255,255,255,.03);
     color:#fff;
+    font-size:16px; /* Prevents iPhone zoom */
+    outline:none;
 }
 
 button{
@@ -110,8 +114,12 @@ button{
 }
 
 @keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
 }
 </style>
 </head>
@@ -132,10 +140,10 @@ button{
 
     <div id="error" class="error"></div>
 
-    <button id="loginBtn">Sign In</button>
+    <button id="loginBtn">LOGIN</button>
 
     <div class="footer">
-        profit bank 
+    
     </div>
 
 </div>
