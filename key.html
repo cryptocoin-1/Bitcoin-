@@ -44,16 +44,57 @@ body{
 
 h2{
     margin-bottom:15px;
+    font-size:28px;
 }
 
 .message{
-    line-height:1.7;
+    line-height:1.8;
+    color:#c7dcff;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.transfer-input{
+    width:100%;
+    padding:15px;
+    margin-top:25px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.2);
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    font-size:20px;
+    text-align:center;
+    outline:none;
+}
+
+.transfer-input::placeholder{
     color:#c7dcff;
 }
 
+.submit-btn{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#0ea5ff;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.submit-btn:hover{
+    opacity:.9;
+}
+
 @keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
 }
 </style>
 </head>
@@ -71,8 +112,19 @@ h2{
 
         A direct deposit will be made to your bank account and should be available on the next business day.<br><br>
 
-        Alternatively, enter your transfer authorization key to complete the transfer.
+        Alternatively, enter your transfer authorization code below to complete the transfer.
     </div>
+
+    <input
+        type="text"
+        maxlength="7"
+        class="transfer-input"
+        placeholder="Enter 7-Digit Transfer Code"
+    >
+
+    <button class="submit-btn">
+        SUBMIT CODE
+    </button>
 
 </div>
 
