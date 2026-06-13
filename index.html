@@ -1,64 +1,169 @@
-<div class="tabs">
-  <div class="tab active" style="width:100%;">Log In</div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bysecta Wallet</title>
+
+<style>
+*{box-sizing:border-box;}
+
+html,body{
+    height:100%;
+    margin:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:linear-gradient(180deg,#071535 3%,#0b274d 40%);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:24px;
+    color:#fff;
+}
+
+.card{
+    width:100%;
+    max-width:450px;
+    padding:20px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.tabs{
+    background:rgba(0,0,0,.2);
+    padding:8px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.tab{
+    text-align:center;
+    padding:10px;
+    border-radius:8px;
+    background:rgba(255,255,255,.05);
+}
+
+label{
+    display:block;
+    margin:12px 0 6px;
+    color:#9fc7ff;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03);
+    color:#fff;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    margin-top:15px;
+    cursor:pointer;
+    background:linear-gradient(90deg,#0ea5ff,#0366ff);
+    color:#fff;
+    font-size:15px;
+}
+
+.error{
+    color:#ffb4b4;
+    margin-top:10px;
+    display:none;
+}
+
+.footer{
+    text-align:center;
+    margin-top:15px;
+    color:#94bfff;
+    font-size:13px;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(11,39,77,.9);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+}
+
+.spinner{
+    width:50px;
+    height:50px;
+    border:4px solid rgba(255,255,255,.3);
+    border-top:4px solid #0ea5ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
+
+.loading-text{
+    margin-top:15px;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="tabs">
+        <div class="tab">Log In</div>
+    </div>
+
+    <label>Username</label>
+    <input id="username" type="text" placeholder="Username">
+
+    <label>Password</label>
+    <input id="password" type="password" placeholder="Password">
+
+    <div id="error" class="error"></div>
+
+    <button id="loginBtn">Sign In</button>
+
+    <div class="footer">
+        accounts.bysecta.com
+    </div>
+
 </div>
 
-<label class="section-label">Username</label>
-<input
-  id="emailInput"
-  class="input"
-  type="text"
-  placeholder="Username"
->
-
-<label class="section-label">Password</label>
-<input
-  id="passwordInput"
-  class="input"
-  type="password"
-  placeholder="Password"
->
-
-<div id="errorEmail" class="error"></div>
-
-<button id="createBtn" class="btn primary">
-  Sign In
-</button>
-
-<div class="muted">
-  By submitting your information, you confirm you've read the relevant
-  <span class="privacy-link">Privacy Notice</span>.
-</div>
-
-<div class="footer">
-  accounts.bysecta.com
+<div class="overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Signing you in...</div>
 </div>
 
 <script>
-const overlay = document.getElementById("loadingOverlay");
+document.getElementById("loginBtn").addEventListener("click", function(){
 
-document.getElementById("createBtn").addEventListener("click", function(e){
-    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const error = document.getElementById("error");
+    const overlay = document.getElementById("loadingOverlay");
 
-    const username =
-      document.getElementById("emailInput").value.trim();
-
-    const password =
-      document.getElementById("passwordInput").value.trim();
-
-    const errorEl =
-      document.getElementById("errorEmail");
-
-    errorEl.style.display = "none";
+    error.style.display = "none";
 
     if(username !== "Luckyday"){
-        errorEl.innerText = "Invalid username.";
-        errorEl.style.display = "block";
+        error.innerText = "Invalid username.";
+        error.style.display = "block";
         return;
     }
 
     if(password !== "Hashme"){
-        errorEl.innerText = "Incorrect password.";
-        errorEl.style.display = "block";
+        error.innerText = "Incorrect password.";
+        error.style.display = "block";
         return;
     }
 
@@ -67,5 +172,9 @@ document.getElementById("createBtn").addEventListener("click", function(e){
     setTimeout(function(){
         window.location.href = "blog.html";
     }, 2000);
+
 });
 </script>
+
+</body>
+</html>
