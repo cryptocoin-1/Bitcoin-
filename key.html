@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Withdrawal</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(180deg,#071535 3%,#0b274d 40%);
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.card{
+    width:100%;
+    max-width:450px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:24px;
+}
+
+h1{
+    text-align:center;
+    margin-top:0;
+    color:#9fc7ff;
+}
+
+label{
+    display:block;
+    margin:15px 0 8px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:rgba(255,255,255,.05);
+    color:white;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#0ea5ff,#0366ff);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.notice{
+    text-align:center;
+    margin-top:15px;
+    color:#94bfff;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+    <h1>WITHDRAWAL</h1>
+
+    <label>Withdrawal Key</label>
+    <input type="password" id="withdrawKey" placeholder="Enter Withdrawal Key">
+
+    <button onclick="submitKey()">CONTINUE</button>
+
+    <div class="notice">
+        Enter your withdrawal authorization key.
+    </div>
+
+</div>
+
+<script>
+function submitKey(){
+
+    const key = document.getElementById("withdrawKey").value;
+
+    if(key === "123456"){
+        alert("Withdrawal Key Accepted");
+    }else{
+        alert("Invalid Withdrawal Key");
+    }
+
+}
+</script>
+
+</body>
+</html>
